@@ -1,7 +1,7 @@
 QUESTION 1.  Read through the program lab9.bin. What do you expect the program to do? More specifically, which register will the program modify when it is run, and what will it contain when the program finishes? (You can probably figure this out merely by reading the comments provided in lab9.bin.)
 
 ANSWER: 
-
+From my understanding, I think the main goal of the program is to first locate essentially where the program is stored and by clearing that location through ANDing it with x00000. By clearing the register 2 (R2) we add the decimal number of 12 and R2 stores 12 within it. I think R2 or register 2 will be modified and it will contain the decimal number 12 when the program finishes. 
 
 QUESTION 2.  Explain in a few sentences why the ability to step through a program (run one instruction at a time) is a very useful tool for debugging a program. Debugging is the process of finding and correcting bugs (or errors) in a program. Hint: Finding a bug is often much more difficult than correcting it.
 
