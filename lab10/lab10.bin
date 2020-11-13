@@ -2,7 +2,41 @@
 ; Make sure to comment your code properly and don't exceed 
 ; the line limitation for this assignment.  Good luck!
 
+; Reet Tiwary, 11/13/2020, this program's function is 
+; to find the sum of the positive numbers by sorting among the 
+; 10 number set using 2's complement and storing it in
+; register 5. I approached it by initialization and 
+; utlizing LDR, AND, ADD, BR, and TRAP instruction sets
+; from referencing the suggested algorithm/decomposition 
+; on wiki lab10 information
+
+; R3 is the pointer which helps locate the numbers within the analyzed memory
+; R4 is the counter that decrements from 10 as a stored value
+; R5 is the register which will store the final sum of the program
+; R6 is the temporary register which holds pointer value
+
 0011 0001 0000 0000 ; x3100 - starting address of the program
 
 ; The program description and code starts here
+
+1110 011 000110001 ; R3 < - 3132, points to the location of numbers in starting memory address
+0101 100 100 1 00000 ; R4 < - 0, initialized to 0, 
+0001 100 100 1 01010 ; R4 < - 10, intitialized to 10, in a sense 10 is rather stored
+0101 101 101 1 00000 ; R5 < - 0, intitialized to 0, since we are trying to find final sum
+0101 110 110 1 00000 ; R6 < - 0, intialized to 0
+
+0110 110 011 000000 ; R6 < - M[R3 + SEXT(000000)], loads R3 memory with sign extend, stores in R6
+0000 110 000000001 ; BR, skips over negative numbers 
+0001 101 101 0 00 110 ; R5 < - R5 + R6, adds current R6 value to R5 value, updating R5
+0001 011 011 1 00001 ; R3 < - R3 + 1, increments pointer register value by 1, storing new value
+0001 100 100 1 11111 ; R4 < - R4 - 1, decrements counter register value by 1, storing new value
+0000 001 111111010 ; BR, goes back to LDR to load another value, loops
+1111 0000 0001 1001 ; TRAP, 25 in vector, halts the program execution
+
+
+
+
+
+
+
 
