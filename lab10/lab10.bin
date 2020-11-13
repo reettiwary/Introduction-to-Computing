@@ -6,7 +6,7 @@
 ; to find the sum of the positive numbers by sorting among the 
 ; 10 number set using 2's complement and storing it in
 ; register 5. I approached it by initialization and 
-; utlizing LDR, AND, ADD, BR,LEA, and TRAP instruction sets to implement
+; utlizing LDR, AND, ADD, BR, LEA, and TRAP instruction sets to implement
 ; loop to allow it to go through the set/memory and finally storing the sum.
 ; I referenced the suggested algorithm/decomposition 
 ; on wiki lab10 information.
