@@ -1,9 +1,11 @@
 Question 1: Describe the errors that occur when trying to assemble lab11.asm. Identify the cause of each error.
 
-
+The errors that occur when trying to assemble lab11.asm are found in line 14 where there is an illegal operands for missing the opcode. The second error that occurs is in line 16 where the instruction appears before the .ORIG label. The third error that occurs is in line 17 where the constant is outside of the allowed range. The fourth error occurs in line 19 where there is an illegal operands for ADD instruction. The fifth error is within line 30 where the constant is once again outside of the allowed range. The sixth error is found within line 32 where the label of OUTERLOOP has already appeared. The seventh error is found within line 35 where the constant is once again outside of the allowed range. Finally, the last error is found within line 43 where there is no .END directive to be found. 
 
 Question 2: For each label in the code, write down the corresponding memory location. 
 
-
+OUTERLOOP, INNERLOOP, INPUT were the three labels. The corresponding memory for OUTERLOOP label is x3005. For the INNERLOOP label, the corresponding memory is x3006. Finally, for the INPUT label x300F. 
 
 Question 3: Between using labels and explicit memory locations/offsets, which one makes the most sense, and why?
+
+Utlizing labels than explicit memory locations/offsets makes the most sense because labels make referring to specific memory locations much easier and clearer. 
