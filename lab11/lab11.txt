@@ -4,7 +4,7 @@ The errors that occur when trying to assemble lab11.asm are found in line 14 whe
 
 Question 2: For each label in the code, write down the corresponding memory location. 
 
-OUTERLOOP, INNERLOOP, INPUT were the three labels. The corresponding memory for OUTERLOOP label is x3005. For the INNERLOOP label, the corresponding memory is x3006. Finally, for the INPUT label x300F. 
+OUTERLOOP, INNERLOOP, INPUT were the three labels. The corresponding memory for OUTERLOOP label is x3005. For the INNERLOOP label, the corresponding memory is x3006. Finally, for the INPUT label x300F. Additionally, I added the RESULT label which was located at x3012. 
 
 Question 3: Between using labels and explicit memory locations/offsets, which one makes the most sense, and why?
 
