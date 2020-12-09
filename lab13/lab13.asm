@@ -1,7 +1,113 @@
+; Reet Tiwary, rtiwary2 12/8/2020
 ; The table below represents an 8x16 font.  For each 8-bit extended ASCII
 ; character, the table uses 16 memory locations, each of which contains
 ; 8 bits (the high 8 bits, for your convenience) marking pixels in the
 ; line for that character.
+
+; Introductory Paragraph:
+; The point of this program was to utilize the row and column counter in Lab 12
+; as well as keeping up with registers that not only loaded in FONT_DATA, but how 
+; it could be looped as a whole to print multiple character line by line rather that printing 
+; a single character. Essentially, the goal was to render a null-terminated string in an 8x16 pixel
+; onto the monitor. How I approached this was keeping my counters from Lab 12 the same, but modifying FONT_DATA and how
+; I could loop the register back to be able to print line by line. Stepping through the program, and using labels to prevent 
+; and infinite loop was very helpful.
+
+; Table of Registers:
+; R0: R0 stores the ASCII value that gets printed onto the monitor screen
+; R1: Temporary register that loads an initial value to be loaded into R5
+; R2: R2 serves to load up and store the FONT_DATA and its information as well as loads in R5 data
+; R3: R3 serves as the row counter starting from 0 to 16, 16 rows/lines in total
+; R4: R4 serves as the column counter starting from 0 to 8, 8 columns in total
+; R5: R5 serves as the register that holds the FONT_DATA along with the ASCII value currently
+; R6: Temporary register which acts as a pointer for the loops
+
+ .ORIG x3000                 ; where the program starts
+           AND R1, R1, #0    ; initialization of R1
+           AND R5, R5, #0    ; initialization of R5
+           AND R6, R6, #0    ; intialization of R6
+                             ; other initializations happen throughout the program, it will be labeled
+
+                             ; I placed the start of my row counter here since essentially 16 rows is somewhat constant
+           AND R3, R3, #0    ; initialization of R3 (row counter as 0)
+           ADD R3, R3, #8    ; row counter cannot be immediately stored with #16 because it would result as -16,
+           ADD R3, R3, #8    ; originally, R3 contains the value of 8 and gets added to another value of 8, resulting in R3 to be 16
+
+           LD R1, val_one    ; loads x5001 into R1 register, in order to be able to go to x5002
+ 
+ NEXTVAL 
+           ADD R1, R1, #1    ; adds current value at x5001 plus 1 which updates the value at R1 to be x5002
+           LDR R5, R1, #0    ; loads the current value stored at R1 (x5002) into R5 which leads to accessing the memory at x5002 (x0048)
+          
+           ADD R5, R5, #0    ; Checks if R5 is loading in 0, not changing into a new value,
+           BRz DONE_ROW      ; then navigates to DONE_ROW to increment and go through a new line
+
+           LEA R2, FONT_DATA ; loads in the FONT_DATA and information into R2
+
+                             ; INLOOP
+           ADD R5, R5, R5    ; multiply R5 by 16, adding it 4x which results in a bit shift but turns 
+           ADD R5, R5, R5    ; x0048 into x0480.
+           ADD R5, R5, R5    ; third time adding R5 to its updated value
+           ADD R5, R5, R5    ; fourth time adding R5 to its updated value
+   
+           ADD R5, R5, R2    ; Add not only R2 which stores FONT_DATA, but R5's new value from adding 4x,
+                             ; resulting in FONT_DATA plus M[x5002]*16 which is stored into R5 and has a new value.
+           ADD R5, R5, R6    ; adds current value at R6 which is 0 with current value at R5
+
+ NEXT_ROW                    ; Checks if R3 != 0?
+           ADD R3, R3, #0    ; Checks if row counter is 0,
+           BRz DONE          ; then NEXT_ROW navigates to DONE which halts the code/program else proceeds with code
+
+           AND R4, R4, #0    ; intialization of R4 (column counter as 0)
+           ADD R4, R4, #8    ; column counter is set to 8
+
+           LDR R2, R5, #0    ; loads the data at R5 onto R2 which keeps track of the FONT_DATA information as well
+ 
+ NEXT_COLUMN                 ; R4 != 0?
+           ADD R4, R4, #0    ; Checks if column counter is 0,
+           BRz NEXTVAL       ; then it navigates to NEXTVAL to repeat the row counter loop and loading information above
+
+           ADD R2, R2, #0    ; add's the original value that R2 was holding with zero, updating the new value stored into R2
+           BRzp LOOP_1       ; Check's if the new value is 0, then navigates to LOOP_1
+
+           ADD R2, R2, #0    ; Check if that if in fact the new value is 1,
+           BRn LOOP_2        ; then navigates to LOOP_2
+
+ LOOP_1
+           LDI R0, val_zero  ; loads in the ASCII address (x5000) into R0
+           BRnzp PRINT_VAL   ; heads towards PRINT_VAL Label
+
+ LOOP_2 
+           LDI R0, val_one   ; loads in the ASCII address (x5001) into R0
+           BRnzp PRINT_VAL   ; heads towards PRINT_VAL Label
+
+ PRINT_VAL
+           OUT               ; prints the characters' value found at the address, displaying on the monitor
+           
+           ADD R2, R2, R2    ; shifts the current value in R2 to be able to count the number of bits persay
+           ADD R4, R4, #-1   ; decreases the column counter by 1
+           BRzp NEXT_COLUMN  ; heads back to NEXT_COLUMN to re-evaluate and repeat the process of adding a new row
+
+
+ DONE_ROW
+           LD R0, ASCII_NL   ; load newline ASCII character (x0A)
+           OUT               ; print newline ASCII character
+
+           ADD R5, R5, #1    ; increments R5's current value by 1
+           ADD R6, R6, #1    ; increments the current value in R6 by 1 to act like a pointer 
+           LD R1, val_one    ; restates R1 to hold the address for ASCII characters
+         
+           ADD R3, R3, #-1   ; decreases the row counter by 1
+           BRnzp NEXTVAL     ; move to NEXTVAL to print the next rows and columns within the loops
+      
+      
+ DONE      HALT              ; outside of the loops, halts
+ 
+ ; Reference
+
+ASCII_NL  .FILL x000A
+val_zero  .FILL x5000
+val_one   .FILL x5001
 
 FONT_DATA
 	.FILL	x0000
@@ -4100,3 +4206,5 @@ FONT_DATA
 	.FILL	x0000
 	.FILL	x0000
 	.FILL	x0000
+
+.END
